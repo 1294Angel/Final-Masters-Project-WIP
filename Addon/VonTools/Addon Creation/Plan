@@ -1,0 +1,26 @@
+Current plan
+
+
+Rigging
+
+    Control Setting - 
+
+        1. Swap control IMPORT file for control CREATION file
+        2. Setup the control adding to create the individual objects for controls as they are chosen to be added to the rig
+
+    Colorisation - 
+
+        1. Must allow for choice between prefix or suffix (l_ or _l)
+        2. Must allow for name choice (_K or _L for left side)
+        3. Must change colour or left and right sides
+
+    Symetrize - 
+        
+        1. Just add an easy button for symetrize
+
+Animation
+
+    Breakdowner - 
+        1. Must allow for sliding between 2 frames
+        2. Must show onionskin at each frame on either end
+    
