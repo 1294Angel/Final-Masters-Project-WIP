@@ -1,156 +1,62 @@
-# ------------------------------------------------------------------------
-#    Addon Info
-# ------------------------------------------------------------------------
+#Import all needed
+import bpy # type: ignore
 
-bl_info = {
-    "name": "Vona's Blender Tools",
-    "author": "Vona",
-    "version": (0, 1, 0),
-    "blender": (4, 0, 0),
-    "location": "Where the user can find it",
-    "description": "An addon that adds rigging tools for quick and easy custom rigs.",
-    "warning": "",
-    "wcooliki_url": "",
-    "tracker_url": "",
-    "category": ""}
+#____________________________________________________________________________________________
+#____________________________________________________________________________________________
+#____________________________________________________________________________________________
 
-import bpy
-import sys 
-import os
+#setting up vars
+tempstr = ""
+tempint = 0
+tempbool = False
 
-from bpy.props import (StringProperty,
-                       BoolProperty,
-                       IntProperty,
-                       FloatProperty,
-                       FloatVectorProperty,
-                       EnumProperty,
-                       PointerProperty,
-                       )
-from bpy.types import (Panel,
-                       Menu,
-                       Operator,
-                       PropertyGroup,
-                       )
+#____________________________________________________________________________________________
+#____________________________________________________________________________________________
+#____________________________________________________________________________________________
 
-dir = os.path.dirname(bpy.data.filepath)
-if not dir in sys.path:
-    sys.path.append(dir )
-
-import von_buttoncontrols
-import imp
-imp.reload(von_buttoncontrols)
-
-#import functions
-from von_buttoncontrols import *
-
-
-# ------------------------------------------------------------------------
-#    Scene Properties
-# ------------------------------------------------------------------------
-
-class MySettings(PropertyGroup):
-
-    my_bool : BoolProperty(
-        name="Enable or Disable",
-        description="A bool property",
-        default = False
-        )
-
-    my_int : IntProperty(
-        name = "Set a value",
-        description="A integer property",
-        default = 23,
-        min = 10,
-        max = 100
-        )
-
-    my_float : FloatProperty(
-        name = "Set a value",
-        description = "A float property",
-        default = 23.7,
-        min = 0.01,
-        max = 30.0
-        )
-        
-    bonebeingsearched: StringProperty(
-        name="String",
-        description="",
-        default="",
-        maxlen=1024,
-        )
-
-# ------------------------------------------------------------------------
-#    Operators
-# ------------------------------------------------------------------------
-
-class VonPanel:
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = 'VonTools'
-    bl_options = {"DEFAULT_CLOSED"}
-
-class VonPanel_PrimaryPanel(VonPanel, bpy.types.Panel):
-    bl_idname = "von.vontools"
-    bl_label= "Von Tools"
-
-    def draw(self,context):
-        layout = self.layout
-        layout.label(text= "Vontools For All Your Rigging Needs")
-
-class VonPanel_RiggingTools(VonPanel, bpy.types.Panel):
-    bl_parent_id = "von.vontools"
-    bl_label = "Rigging Tools"
-
-    def draw(self, context):
-        layout = self.layout
-        row = layout.row()
-        scene = context.scene
-        mytool=scene.my_tool
-
-        row.label(text= "Rigging Tools", icon= 'CUBE')
-        layout.prop(mytool, "my_bool", text="Didthiswork????")
-        layout.operator("von.popoutpanelbonesearch('INVOKE_DEFAULT')")     
-
-class VonPanel_RiggingTools__Submenu_BoneSearch(bpy.types.Operator):
-    bl_idname = "von.popoutpanelbonesearch"
-    bl_label = "Bone Search"
+#for object mode
+def poll(compstr):
+    active_object = bpy.context.mode
+    if active_object == compstr:
+        bool = True
+        print(active_object + " --- " + bool)
+        return bool
+    if active_object != compstr:
+        bool = False
+        print(active_object + " --- " + bool)
+        return bool
+    else:
+        print("Error-1-PollNotEqual")
     
-    text : bpy.props.StringProperty(name="Enter Text", default="")
-    def execute(self, context):
-        text = self.text
-        searchforbone(text)
-        return {'FINISHED'}
-    def invoke(self, context, event):
-        return context.window_manager.invoke_props_dialog(self)
 
-
-# ------------------------------------------------------------------------
-#    Registration
-# ------------------------------------------------------------------------
-
-classes = (
-    MySettings,
-    VonPanel_PrimaryPanel,
-    VonPanel_RiggingTools,
-    VonPanel_RiggingTools__Submenu_BoneSearch
-)
-
-def register():
-    from bpy.utils import register_class
-    for cls in classes:
-        register_class(cls)
-
-    bpy.types.Scene.my_tool = PointerProperty(type=MySettings)
-
-def unregister():
-    from bpy.utils import unregister_class
-    for cls in reversed(classes):
-        unregister_class(cls)
-
-    del bpy.types.Scene.my_tool
+#for pose mode
+def setcontrol(temp_controlname):
+    if poll("POSE") == True:
+        controlname=str(temp_controlname)
+        bpy.context.active_pose_bone.custom_shape = bpy.data.objects[controlname]
+    
+def colorizerig():
+    if poll("POSE") == True:
+        lst_bonenames = []
+        for armature in [ob for ob in bpy.data.objects if ob.type == 'ARMATURE']:
+            for bone in armature.bones.values():
+                lst_bonenames.append(bone.name)
+    else:
+        print("Error-3-ColorizeRig-PollNotEqual")
+            
+def searchforbone(temp_bonetofind):
+    if poll("POSE") == True:
+        bpy.ops.pose.select_all(action='DESELECT')
+        bpy.data.objects["SA-04 Combat Technician Armature"].data.bones[temp_bonetofind].select=True
+    if poll("EDIT_ARMATURE") == True:
+        bpy.ops.armature.select_all(action='DESELECT')
+        bpy.data.objects["SA-04 Combat Technician Armature"].data.bones[temp_bonetofind].select=True
+    else:
+        print("Error-4-SearchForBone-PollNotEqual")
 
 
 
-if __name__ == "__main__":
-    register()
-    #bpy.ops.von.popoutpanelbonesearch('INVOKE_DEFAULT')
+
+#____________________________________________________________________________________________
+#____________________________________________________________________________________________
+#____________________________________________________________________________________________
