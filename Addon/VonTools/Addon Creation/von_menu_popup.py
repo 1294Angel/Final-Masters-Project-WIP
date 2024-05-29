@@ -36,12 +36,13 @@ dir = os.path.dirname(bpy.data.filepath)
 if not dir in sys.path:
     sys.path.append(dir )
 
-import von_buttoncontrols
+import von_buttoncontrols, von_createcontrols
 import imp
 imp.reload(von_buttoncontrols)
-
+imp.reload(von_createcontrols)
 #import functions
 from von_buttoncontrols import *
+from von_createcontrols import *
 
 
 # ------------------------------------------------------------------------
@@ -95,7 +96,31 @@ class VonPanel_RiggingTools__Submenu_BoneSearch(bpy.types.Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 
+class VonPanel_RiggingTools__Submenu_CreateControl(bpy.types.Operator):
+    bl_idname = "von.createcontrol"
+    bl_label = "Create Control"
+    
+    text : bpy.props.StringProperty(name="Enter Text", default="") # type: ignore
+    def execute(self, context):
+        text = self.text
+        createobject(text, context, self)
+        return {'FINISHED'}
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
 
+# ------------------------------------------------------------------------
+#    Button Setup
+# ------------------------------------------------------------------------
+
+class VonPanel_RiggingTools__Button_SaveNewControl(bpy.types.Operator):
+    bl_idname = "von.savenewcontrol"
+    bl_label = "Save Control"
+    
+    def execute(self, context):
+        savenewcontrol(True)
+        return {'FINISHED'}
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
 
 
 # ------------------------------------------------------------------------
@@ -132,6 +157,12 @@ class VonPanel_RiggingTools(VonPanel, bpy.types.Panel):
         #Bone Search
         layout.operator_context = 'INVOKE_DEFAULT'
         layout.operator("von.popoutpanelbonesearch")
+        
+        #create object
+        layout.operator_context = 'INVOKE_DEFAULT'
+        layout.operator("von.createcontrol")
+        
+        layout.operator("von.savenewcontrol")
 
 
 # ------------------------------------------------------------------------
@@ -142,7 +173,9 @@ classes = (
     MySettings,
     VonPanel_PrimaryPanel,
     VonPanel_RiggingTools,
-    VonPanel_RiggingTools__Submenu_BoneSearch
+    VonPanel_RiggingTools__Submenu_BoneSearch,
+    VonPanel_RiggingTools__Submenu_CreateControl,
+    VonPanel_RiggingTools__Button_SaveNewControl
 )
 
 def register():
