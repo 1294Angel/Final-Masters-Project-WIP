@@ -17,6 +17,12 @@ bl_info = {
 import bpy # type: ignore
 import sys 
 import os
+from bpy.types import Operator # type: ignore
+from bpy_extras.object_utils import AddObjectHelper # type: ignore
+from bpy.types import Operator # type: ignore
+from bpy_extras.object_utils import object_data_add # type: ignore
+from mathutils import Vector # type: ignore
+from math import radians # type: ignore
 
 from bpy.props import (StringProperty, # type: ignore
                        BoolProperty,
@@ -43,7 +49,6 @@ imp.reload(von_createcontrols)
 #import functions
 from von_buttoncontrols import *
 from von_createcontrols import *
-
 
 # ------------------------------------------------------------------------
 #    Scene Properties
@@ -88,12 +93,13 @@ class VonPanel_RiggingTools__Submenu_BoneSearch(bpy.types.Operator):
     bl_idname = "von.popoutpanelbonesearch"
     bl_label = "Bone Search"
     
+
     text : bpy.props.StringProperty(name="Enter Text", default="") # type: ignore
     def execute(self, context):
         text = self.text
         searchforbone(text)
         return {'FINISHED'}
-    def invoke(self, context, event):
+    def invoke(self, context, event):   
         return context.window_manager.invoke_props_dialog(self)
 
 class VonPanel_RiggingTools__Submenu_CreateControl(bpy.types.Operator):
@@ -103,7 +109,7 @@ class VonPanel_RiggingTools__Submenu_CreateControl(bpy.types.Operator):
     text : bpy.props.StringProperty(name="Enter Text", default="") # type: ignore
     def execute(self, context):
         text = self.text
-        createobject(text, context, self)
+        create_mesh_from_json_data(False)
         return {'FINISHED'}
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
@@ -117,7 +123,7 @@ class VonPanel_RiggingTools__Button_SaveNewControl(bpy.types.Operator):
     bl_label = "Save Control"
     
     def execute(self, context):
-        savenewcontrol(True)
+        saveselectedmesh()
         return {'FINISHED'}
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)

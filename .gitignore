@@ -3,3 +3,6 @@
 *.blend1
 Rig/Blend Files/BugRig_FinalMastersProject9.blend1
 Rig/Blend Files/BugRig_FinalMastersProject9.blend1
+*.blend@
+Addon/VonTools/Addon Creation/von_savedatatojson.py
+Addon/VonTools/Addon Creation/controls/Sphere.txt
