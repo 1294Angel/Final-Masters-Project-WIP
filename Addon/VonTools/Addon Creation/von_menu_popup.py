@@ -157,18 +157,22 @@ class VonPanel_RiggingTools(VonPanel, bpy.types.Panel):
         scene = context.scene
         mytool=scene.my_tool
 
-        row.label(text= "Rigging Tools", icon= 'CUBE')
+        row.label(text= "Bone Manipulation", icon= 'CUBE')
         #Colorize Rig
 
         #Bone Search
         layout.operator_context = 'INVOKE_DEFAULT'
         layout.operator("von.popoutpanelbonesearch")
         
+
+        row.label(text= "Bone Shapes", icon= 'CUBE')
         #create object
         layout.operator_context = 'INVOKE_DEFAULT'
         layout.operator("von.createcontrol")
         
         layout.operator("von.savenewcontrol")
+
+        row.label(text= "Weight Painting", icon= 'CUBE')
 
 
 # ------------------------------------------------------------------------
