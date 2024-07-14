@@ -109,7 +109,7 @@ class VonPanel_RiggingTools__Submenu_CreateControl(bpy.types.Operator):
     text : bpy.props.StringProperty(name="Enter Text", default="") # type: ignore
     def execute(self, context):
         text = self.text
-        create_mesh_from_json_data(False)
+        create_mesh_from_json_data(False,text)
         return {'FINISHED'}
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)

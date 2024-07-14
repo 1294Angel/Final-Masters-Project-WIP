@@ -74,9 +74,9 @@ def get_mesh_data(mesh_object):
     }
     return data
 
-def create_mesh_from_json_data(shouldskeletonise):
+def create_mesh_from_json_data(shouldskeletonise,nameoffile):
 
-    mesh_data = load_data()
+    mesh_data = load_data(nameoffile)
     create_mesh_from_data(mesh_data,shouldskeletonise)
 
 def create_mesh_from_data(data,shouldskeletonise):
