@@ -25,8 +25,6 @@ def poll(compstr):
         bool = False
         print(active_object + " --- " + "False")
         return bool
-    else:
-        print("Error-1-PollNotEqual")
     
 
 #for pose mode
@@ -45,9 +43,6 @@ def colorizerig():
         print("Error-3-ColorizeRig-PollNotEqual")
             
 def searchforbone(selected_armature, temp_bonetofind):
-    spaceconsole(3)
-    print(selected_armature)
-    spaceconsole(3)
     if poll("POSE") == True:
         bpy.ops.pose.select_all(action='DESELECT')
         bpy.data.objects[str(selected_armature)].data.bones[temp_bonetofind].select=True
@@ -57,7 +52,9 @@ def searchforbone(selected_armature, temp_bonetofind):
     else:
         print("Error-4-SearchForBone-PollNotEqual")
 
-
+def getinbuiltfilesindirectory(directorytosearch):
+    direct = str(directorytosearch)+"//"+"controls"+"//"+"InbuiltControls//"
+    return os.listdir(directorytosearch)
 
 
 #____________________________________________________________________________________________

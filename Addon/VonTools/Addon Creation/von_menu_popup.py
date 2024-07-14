@@ -107,6 +107,10 @@ class VonPanel_RiggingTools__Submenu_BoneSearch(bpy.types.Operator):
     def invoke(self, context, event):   
         return context.window_manager.invoke_props_dialog(self)
 
+# ------------------------------------------------------------------------
+#    Button Setup
+# ------------------------------------------------------------------------
+
 class VonPanel_RiggingTools__Submenu_CreateControl(bpy.types.Operator):
     bl_idname = "von.createcontrol"
     bl_label = "Create Control"
@@ -119,10 +123,6 @@ class VonPanel_RiggingTools__Submenu_CreateControl(bpy.types.Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 
-# ------------------------------------------------------------------------
-#    Button Setup
-# ------------------------------------------------------------------------
-
 class VonPanel_RiggingTools__Button_SaveNewControl(bpy.types.Operator):
     bl_idname = "von.savenewcontrol"
     bl_label = "Save Control"
@@ -133,6 +133,16 @@ class VonPanel_RiggingTools__Button_SaveNewControl(bpy.types.Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 
+
+class VonPanel_RiggingTools_Button_TEMP(bpy.types.Operator):
+    bl_idname = "von.testbutton"
+    bl_label = "Test -- Populate List From Folder"
+
+    def execute(self,context):
+        getinbuiltfilesindirectory(get_path_to_mesh_data())
+        return {'FINISHED'}
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
 
 # ------------------------------------------------------------------------
 #    Menu Setup
@@ -174,7 +184,7 @@ class VonPanel_RiggingTools(VonPanel, bpy.types.Panel):
         #create object
         layout.operator_context = 'INVOKE_DEFAULT'
         layout.operator("von.createcontrol")
-        
+        layout.operator("von.testbutton")
         layout.operator("von.savenewcontrol")
 
         row.label(text= "Weight Painting", icon= 'CUBE')
@@ -190,7 +200,8 @@ classes = (
     VonPanel_RiggingTools,
     VonPanel_RiggingTools__Submenu_BoneSearch,
     VonPanel_RiggingTools__Submenu_CreateControl,
-    VonPanel_RiggingTools__Button_SaveNewControl
+    VonPanel_RiggingTools__Button_SaveNewControl,
+    VonPanel_RiggingTools_Button_TEMP
 )
 
 def register():

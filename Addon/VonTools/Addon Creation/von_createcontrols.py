@@ -115,7 +115,7 @@ def getfolderloc():
     return(dir)
 
 def get_path_to_mesh_data():
-    meshdatafile = str(getfolderloc())+"//"+"controls"+"//"+"TESTSAVE//" #+"/"+str(controlname)+".json"
+    meshdatafile = str(getfolderloc())+"//"+"controls"+"//"+"InbuiltControls//" #+"/"+str(controlname)+".json"
     print(meshdatafile)
     return meshdatafile
 #E:\Masters Wor\FinalMastersProject\Final-Masters-Project-WIP\Addon\VonTools\Addon Creation\controls\TESTSAVE
