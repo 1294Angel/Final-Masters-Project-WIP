@@ -1,6 +1,6 @@
 #Import all needed
 import bpy # type: ignore
-
+from von_createcontrols import *    
 #____________________________________________________________________________________________
 #____________________________________________________________________________________________
 #____________________________________________________________________________________________
@@ -19,11 +19,11 @@ def poll(compstr):
     active_object = bpy.context.mode
     if active_object == compstr:
         bool = True
-        print(active_object + " --- " + bool)
+        print(active_object + " --- " + "True")
         return bool
     if active_object != compstr:
         bool = False
-        print(active_object + " --- " + bool)
+        print(active_object + " --- " + "False")
         return bool
     else:
         print("Error-1-PollNotEqual")
@@ -44,13 +44,16 @@ def colorizerig():
     else:
         print("Error-3-ColorizeRig-PollNotEqual")
             
-def searchforbone(temp_bonetofind):
+def searchforbone(selected_armature, temp_bonetofind):
+    spaceconsole(3)
+    print(selected_armature)
+    spaceconsole(3)
     if poll("POSE") == True:
         bpy.ops.pose.select_all(action='DESELECT')
-        bpy.data.objects["SA-04 Combat Technician Armature"].data.bones[temp_bonetofind].select=True
+        bpy.data.objects[str(selected_armature)].data.bones[temp_bonetofind].select=True
     if poll("EDIT_ARMATURE") == True:
         bpy.ops.armature.select_all(action='DESELECT')
-        bpy.data.objects["SA-04 Combat Technician Armature"].data.bones[temp_bonetofind].select=True
+        bpy.data.objects[str(selected_armature)].data.bones[temp_bonetofind].select=True
     else:
         print("Error-4-SearchForBone-PollNotEqual")
 

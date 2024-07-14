@@ -97,7 +97,12 @@ class VonPanel_RiggingTools__Submenu_BoneSearch(bpy.types.Operator):
     text : bpy.props.StringProperty(name="Enter Text", default="") # type: ignore
     def execute(self, context):
         text = self.text
-        searchforbone(text)
+        armaturename=bpy.context.selected_objects
+        for i in armaturename:
+            spaceconsole(3)
+            print(i.name)
+            spaceconsole(3)
+            searchforbone(i.name, text)
         return {'FINISHED'}
     def invoke(self, context, event):   
         return context.window_manager.invoke_props_dialog(self)
