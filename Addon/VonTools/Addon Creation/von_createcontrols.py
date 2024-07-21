@@ -31,7 +31,7 @@ def create_json_data_from_mesh():
 
 
 def save_data(data):
-    path_to_file = get_path_to_mesh_data()+data["object_name"]+".json"
+    path_to_file = get_path_to_preset_mesh_data()+data["object_name"]+".json"
     with open(path_to_file, "w") as out_file_obj:
         text = json.dumps(data, indent=4)
         out_file_obj.write(text)
@@ -45,8 +45,11 @@ def saveselectedmesh():
 # ------------------------------------------------------------------------
 
 
-def load_data(nameoffile):
-    path_to_file = get_path_to_mesh_data()+nameoffile+".json"
+def load_data(nameoffile,ispresetboneshape):
+    if ispresetboneshape == True:
+        path_to_file = get_path_to_preset_mesh_data()+"//"+"controls"+"//"+"InbuiltControls//"+nameoffile+".json"
+    if ispresetboneshape == False:
+        path_to_file = get_path_to_preset_mesh_data()+"//"+"controls"+"//"+"CustomControls//"+nameoffile+".json"
     with open(path_to_file, "r") as in_file_obj:
         text = in_file_obj.read()
         data = json.loads(text)
@@ -74,9 +77,9 @@ def get_mesh_data(mesh_object):
     }
     return data
 
-def create_mesh_from_json_data(shouldskeletonise,nameoffile):
+def create_mesh_from_json_data(ispresetboneshape,shouldskeletonise,nameoffile):
 
-    mesh_data = load_data(nameoffile)
+    mesh_data = load_data(nameoffile,ispresetboneshape)
     create_mesh_from_data(mesh_data,shouldskeletonise)
 
 def create_mesh_from_data(data,shouldskeletonise):
@@ -111,14 +114,46 @@ def getobjectdata(controldata):
 def getfolderloc():
     dir = os.path.dirname(bpy.data.filepath)
     if not dir in sys.path:
-        sys.path.append(dir )
+        sys.path.append(dir)
     return(dir)
 
-def get_path_to_mesh_data():
+def get_path_to_folderloc():
+    spaceconsole(10)
+    meshdatafile = str(getfolderloc())
+    print()
+    spaceconsole(10)
+    return meshdatafile
+
+def get_path_to_preset_mesh_data():
     meshdatafile = str(getfolderloc())+"//"+"controls"+"//"+"InbuiltControls//" #+"/"+str(controlname)+".json"
-    print(meshdatafile)
     return meshdatafile
 #E:\Masters Wor\FinalMastersProject\Final-Masters-Project-WIP\Addon\VonTools\Addon Creation\controls\TESTSAVE
+
+def organisetocontrolscollection(createdobjectname):
+    collectiontomoveto = "Controls Collection"
+    collectionexists = False
+
+
+    #Check if the controls collection already exists and add it in (In a way that is visible to the user in the default viewport outliner) if it doesn't
+    for collections in bpy.data.collections:
+        if collections.name == collectiontomoveto:
+            collectionexists = True
+            break
+    
+    if collectionexists == True:
+        print("Collection Exists")
+    object = bpy.context.active_object
+    if collectionexists == False:
+        #Create And Link Custom Collection
+        collection = bpy.data.collections.new(collectiontomoveto)
+        bpy.context.scene.collection.children.link(collection)
+    
+
+    collectiontomoveto = bpy.data.collections[collectiontomoveto]
+
+    bpy.context.collection.objects.unlink(object)
+    
+    collectiontomoveto.objects.link(object)
 
 
 

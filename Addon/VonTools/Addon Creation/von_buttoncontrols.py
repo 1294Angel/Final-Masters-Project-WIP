@@ -52,9 +52,37 @@ def searchforbone(selected_armature, temp_bonetofind):
     else:
         print("Error-4-SearchForBone-PollNotEqual")
 
-def getinbuiltfilesindirectory(directorytosearch):
-    direct = str(directorytosearch)+"//"+"controls"+"//"+"InbuiltControls//"
-    return os.listdir(directorytosearch)
+def getexistingfilesindirectories(basedirectorytosearch):
+    
+    inbuilt = str(basedirectorytosearch)+"//"+"controls"+"//"+"InbuiltControls//"
+    custom = str(basedirectorytosearch)+"//"+"controls"+"//"+"CustomControls//"
+
+    spaceconsole(3)
+    print("Inbuilt Filepath")
+    print(inbuilt)
+    print("Base Directory To Search")
+    print(basedirectorytosearch)
+
+
+    inbuiltlist = os.listdir(inbuilt)
+    customlist = os.listdir(custom)
+    totallist = []
+    totallist.append(inbuiltlist)
+    totallist.append(customlist)
+
+    spaceconsole(3)
+    print("Get Inbuilt Files In Directory -->")
+    print("")
+    print("Inbuilt")
+    print(totallist[0])
+    print("Custom")
+    print(totallist[1])
+    print("Total")
+    print(totallist)
+    spaceconsole(3)
+
+    return totallist
+    #[['FUCKYEAH.json', 'Suzanne.json'], ['Curious.json']]
 
 
 #____________________________________________________________________________________________

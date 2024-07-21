@@ -23,6 +23,7 @@ from bpy.types import Operator # type: ignore
 from bpy_extras.object_utils import object_data_add # type: ignore
 from mathutils import Vector # type: ignore
 from math import radians # type: ignore
+from pathlib import Path
 
 from bpy.props import (StringProperty, # type: ignore
                        BoolProperty,
@@ -94,7 +95,9 @@ class VonPanel_RiggingTools__Submenu_BoneSearch(bpy.types.Operator):
     bl_label = "Bone Search"
     
 
-    text : bpy.props.StringProperty(name="Enter Text", default="") # type: ignore
+    text : bpy.props.StringProperty(
+        name="Enter Text", default=""
+        ) # type: ignore
     def execute(self, context):
         text = self.text
         armaturename=bpy.context.selected_objects
@@ -107,13 +110,92 @@ class VonPanel_RiggingTools__Submenu_BoneSearch(bpy.types.Operator):
     def invoke(self, context, event):   
         return context.window_manager.invoke_props_dialog(self)
 
+
+#Creating Dropdown Menu Popup
+class Von_Dropdown_AddCustomBoneshape(bpy.types.Operator):
+    bl_label = "Template Operator"
+    bl_idname = "von.testinglonglistbitch"
+
+    temp_items = getexistingfilesindirectories(getfolderloc())
+    spaceconsole(3)
+    print("Total Temp Items")
+    print(temp_items)
+    #Format
+    #[[List of files in Inbuilt Controls],[List of files in Custom Controls]]
+    #[['FUCKYEAH.json', 'Suzanne.json'], ['Curious.json']]
+
+
+
+
+    numbertimes = 0
+    for i in temp_items[0]:
+        numbertimes = numbertimes + 1
+        print(numbertimes)
+        print("DropdownClass")
+        print(i)
+    spaceconsole(3)
+    
+    temp_total = 0
+    sendtoenum = []
+    for i in temp_items[0]:
+            temp_total = temp_total + 1
+            temp_total_string = f"'{str(temp_total)}'"
+            #idescription = f"Click To Create {i} As An Avalible Boneshape"
+            listofstrings = tuple((temp_total_string, i, i))
+
+            """ 
+            REALLY This needs to be formatted as 
+            
+            [
+            ('1', 'FUCKYEAH', 'FUCKYEAH'),
+            ('2', 'Suzanne', 'Suzanne')
+            ]
+            
+                not 
+            
+            [
+            [1, 'FUCKYEAH', 'FUCKYEAH'],
+            [2, 'Suzanne', 'Suzanne']
+            ] 
+            
+            or else blender will refuse to read it and the enum failure will cause blender to crash and the dropdown to fail
+            
+            """
+            
+            sendtoenum.append(listofstrings)
+            spaceconsole(5)
+            print("Send To Enum " + str(temp_total) + "  -->")
+            print(sendtoenum)
+            spaceconsole(5)
+
+    preset_enum : bpy.props.EnumProperty(
+        name = "",
+        description = "Select An Option",   
+        items = sendtoenum,
+    )     # type: ignore
+    
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+    
+    
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "preset_enum")
+    
+    def execute(self, context):
+        temp_items = getexistingfilesindirectories(get_path_to_preset_mesh_data())
+        create_mesh_from_json_data(False,temp_items[self.preset_enum])
+    
+        return {'FINISHED'}    
+
 # ------------------------------------------------------------------------
 #    Button Setup
 # ------------------------------------------------------------------------
 
 class VonPanel_RiggingTools__Submenu_CreateControl(bpy.types.Operator):
-    bl_idname = "von.createcontrol"
-    bl_label = "Create Control"
+    bl_idname = "von.loadcustomcontrol"
+    bl_label = "Load Custom Control"
     
     text : bpy.props.StringProperty(name="Enter Text", default="") # type: ignore
     def execute(self, context):
@@ -139,10 +221,23 @@ class VonPanel_RiggingTools_Button_TEMP(bpy.types.Operator):
     bl_label = "Test -- Populate List From Folder"
 
     def execute(self,context):
-        getinbuiltfilesindirectory(get_path_to_mesh_data())
+        
+        print(getexistingfilesindirectories(get_path_to_preset_mesh_data()))
         return {'FINISHED'}
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
+
+"""
+class VonPanel_RiggingTools__Button_GeneratePresetBoneshapes(bpy.types.Operator):
+    bl_idname = "von.generatepresetboneshapes"
+    bl_label = "Generate Preset Boneshapes"
+    
+    def execute(self, context):
+        getexistingfilesindirectories(get_path_to_preset_mesh_data())
+        return {'FINISHED'}
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+    """
 
 # ------------------------------------------------------------------------
 #    Menu Setup
@@ -183,9 +278,11 @@ class VonPanel_RiggingTools(VonPanel, bpy.types.Panel):
         row.label(text= "Bone Shapes", icon= 'CUBE')
         #create object
         layout.operator_context = 'INVOKE_DEFAULT'
-        layout.operator("von.createcontrol")
+        layout.operator("von.testinglonglistbitch")
         layout.operator("von.testbutton")
         layout.operator("von.savenewcontrol")
+        #layout.operator("von.generatepresetboneshapes")
+
 
         row.label(text= "Weight Painting", icon= 'CUBE')
 
@@ -201,7 +298,9 @@ classes = (
     VonPanel_RiggingTools__Submenu_BoneSearch,
     VonPanel_RiggingTools__Submenu_CreateControl,
     VonPanel_RiggingTools__Button_SaveNewControl,
-    VonPanel_RiggingTools_Button_TEMP
+    VonPanel_RiggingTools_Button_TEMP,
+    #VonPanel_RiggingTools__Button_GeneratePresetBoneshapes,
+    Von_Dropdown_AddCustomBoneshape
 )
 
 def register():
