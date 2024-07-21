@@ -1,5 +1,6 @@
 #Import all needed
 import bpy # type: ignore
+import os
 from von_createcontrols import *    
 #____________________________________________________________________________________________
 #____________________________________________________________________________________________
@@ -27,11 +28,7 @@ def poll(compstr):
         return bool
     
 
-#for pose mode
-def setcontrol(temp_controlname):
-    if poll("POSE") == True:
-        controlname=str(temp_controlname)
-        bpy.context.active_pose_bone.custom_shape = bpy.data.objects[controlname]
+
     
 def colorizerig():
     if poll("POSE") == True:
@@ -54,33 +51,8 @@ def searchforbone(selected_armature, temp_bonetofind):
 
 def getexistingfilesindirectories(basedirectorytosearch):
     
-    inbuilt = str(basedirectorytosearch)+"//"+"controls"+"//"+"InbuiltControls//"
-    custom = str(basedirectorytosearch)+"//"+"controls"+"//"+"CustomControls//"
-
-    spaceconsole(3)
-    print("Inbuilt Filepath")
-    print(inbuilt)
-    print("Base Directory To Search")
-    print(basedirectorytosearch)
-
-
-    inbuiltlist = os.listdir(inbuilt)
-    customlist = os.listdir(custom)
-    totallist = []
-    totallist.append(inbuiltlist)
-    totallist.append(customlist)
-
-    spaceconsole(3)
-    print("Get Inbuilt Files In Directory -->")
-    print("")
-    print("Inbuilt")
-    print(totallist[0])
-    print("Custom")
-    print(totallist[1])
-    print("Total")
-    print(totallist)
-    spaceconsole(3)
-
+    FileDirectory = str(basedirectorytosearch)+"//"+"controls"
+    totallist = os.listdir(FileDirectory)
     return totallist
     #[['FUCKYEAH.json', 'Suzanne.json'], ['Curious.json']]
 
