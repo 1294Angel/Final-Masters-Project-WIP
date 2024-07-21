@@ -28,7 +28,7 @@ def poll(compstr):
         return bool
     
 
-
+#FNCTIOANL
     
 def colorizerig():
     if poll("POSE") == True:
