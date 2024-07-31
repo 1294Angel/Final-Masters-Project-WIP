@@ -2,7 +2,7 @@
 #    Import Required Controls -- NEEDS CLEANUP
 # ------------------------------------------------------------------------
 
-import bpy, json, pprint, bmesh, os, sys # type: ignore
+import bpy, json, pprint, bmesh, os, sys, mathutils # type: ignore
 from bpy import context # type: ignore
 from bpy.types import Operator # type: ignore
 from bpy_extras.object_utils import object_data_add # type: ignore
@@ -212,8 +212,17 @@ def organisetocontrolscollection(createdobjectname):
     
     collectiontomoveto.objects.link(object)
 
+# ------------------------------------------------------------------------
+#    Create Weight Hammer Functions
+# ------------------------------------------------------------------------
 
+def getnearbyvertexinfo(selectedvertex):
+    #relies on KDTree Utilities - https://docs.blender.org/api/current/mathutils.kdtree.html
+    obj = context.object
 
+    mesh = obj.data
+    size = len(mesh.vertices)
+    kd = mathutils.kdtree.KDTree(size)
 
 
 
@@ -221,4 +230,3 @@ def organisetocontrolscollection(createdobjectname):
 # ------------------------------------------------------------------------
 #    Test Controls
 # ------------------------------------------------------------------------
-
