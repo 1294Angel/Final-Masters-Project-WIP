@@ -1,0 +1,21 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"E:/masters-project-3/DismembermentUE5/Content/h011090k/Blueprints/Char/Aracnid.uasset",
+				"E:/masters-project-3/DismembermentUE5/Content/h011090k/Blueprints/Animation/Aracnid_Warrior.uasset",
+				"E:/masters-project-3/DismembermentUE5/Content/h011090k/Blueprints/ControlRig/Aracnid.uasset",
+				"E:/masters-project-3/DismembermentUE5/Content/h011090k/Blueprints/Char/Aracnid_Warrior_CHAR.uasset",
+				"E:/masters-project-3/DismembermentUE5/Content/__ExternalActors__/FirstPerson/Maps/FirstPersonMap/5/8C/EAHCBN229IT8APJO305AH5.uasset",
+				"E:/masters-project-3/DismembermentUE5/Content/__ExternalActors__/FirstPerson/Maps/FirstPersonMap/3/ZK/NSMXK6SA9UX5ERNHO9I5MQ.uasset",
+				"E:/masters-project-3/DismembermentUE5/Content/h011090k/Blueprints/Char/BP_LostBits.uasset",
+				"E:/masters-project-3/DismembermentUE5/Content/FirstPerson/Blueprints/BP_FirstPersonProjectile.uasset",
+				"E:/masters-project-3/DismembermentUE5/Content/FirstPerson/Blueprints/BP_Weapon_Component.uasset",
+				"E:/masters-project-3/DismembermentUE5/Content/h011090k/AnimFiles/Aracnid_Warrior_Idle_Armature_ArmatureAction.uasset"
+			]
+		}
+	]
+}
