@@ -2,17 +2,6 @@
 #    Addon Info
 # ------------------------------------------------------------------------
 
-bl_info = {
-    "name": "Vona's Blender Tools",
-    "author": "Vona",
-    "version": (0, 1, 0),
-    "blender": (4, 0, 0),
-    "location": "Where the user can find it",
-    "description": "An addon that adds rigging tools for quick and easy custom rigs.",
-    "warning": "",
-    "wcooliki_url": "",
-    "tracker_url": "",
-    "category": ""}
 
 import bpy # type: ignore
 import sys 
@@ -28,7 +17,7 @@ import re
 from bpy.props import (StringProperty, # type: ignore
                        BoolProperty,
                        IntProperty,
-                       FloatProperty,
+                       FloatProperty, 
                        FloatVectorProperty,
                        EnumProperty,
                        PointerProperty,
@@ -39,18 +28,12 @@ from bpy.types import (Panel, # type: ignore
                        PropertyGroup,
                        )
 
-dir = os.path.dirname(bpy.data.filepath)
-if not dir in sys.path:
-    sys.path.append(dir )
 
-import von_buttoncontrols, von_createcontrols
+from . import von_buttoncontrols
+from . import von_createcontrols
 import imp
 imp.reload(von_buttoncontrols)
 imp.reload(von_createcontrols)
-#import functions
-from von_buttoncontrols import *
-from von_createcontrols import *
-
 # ------------------------------------------------------------------------
 #    Scene Properties
 # ------------------------------------------------------------------------
@@ -101,7 +84,7 @@ class VonPanel_RiggingTools__Submenu_BoneSearch(bpy.types.Operator):
     def execute(self, context):
         text = self.text
         armaturename=bpy.context.selected_objects
-        searchforbone(bpy.context.selected_objects[0].name, text)
+        von_buttoncontrols.searchforbone(bpy.context.selected_objects[0].name, text)
         return {'FINISHED'}
     def invoke(self, context, event):   
         return context.window_manager.invoke_props_dialog(self)
@@ -112,7 +95,7 @@ class Von_Dropdown_AddCustomBoneshape(bpy.types.Operator):
     bl_label = "Add Custom Bone"
     bl_idname = "von.addcustomboneshape"
 
-    temp_items = getexistingfilesindirectories(getfolderloc())
+    temp_items = von_buttoncontrols.getexistingfilesindirectories(von_createcontrols.getfolderloc())
     temp_total = 0
     sendtoenum = []
     for i in temp_items:
@@ -149,18 +132,18 @@ class Von_Dropdown_AddCustomBoneshape(bpy.types.Operator):
     def execute(self, context):
         temp_activebone =  bpy.context.active_pose_bone.name
         temp_activearmature = bpy.context.selected_objects[0].name
-        temp_items = getexistingfilesindirectories(getfolderloc())
+        temp_items = von_buttoncontrols.getexistingfilesindirectories(von_createcontrols.getfolderloc())
 
-        spaceconsole(20)
+        von_createcontrols.spaceconsole(20)
         enumint = int(re.sub('\D', '', self.filetoloadselection_enum))
         enumint = enumint - 1
         objectname = os.path.splitext(os.path.basename(temp_items[enumint]))[0]
-        create_mesh_from_json_data(self.shouldskeletonise_bool,objectname)
-        controltouse = setname(load_data(objectname),self.shouldskeletonise_bool)
+        von_createcontrols.create_mesh_from_json_data(self.shouldskeletonise_bool,objectname)
+        controltouse = von_createcontrols.setname(von_createcontrols.load_data(objectname),self.shouldskeletonise_bool)
         bpy.context.view_layer.objects.active = bpy.data.objects[temp_activearmature]
         bpy.ops.object.mode_set(mode = 'POSE')
-        searchforbone(temp_activearmature,temp_activebone)
-        setcontrol(controltouse)
+        von_buttoncontrols.searchforbone(temp_activearmature,temp_activebone)
+        von_createcontrols.setcontrol(controltouse)
 
 
 
@@ -180,7 +163,7 @@ class VonPanel_RiggingTools__Submenu_CreateControl(bpy.types.Operator):
     text : bpy.props.StringProperty(name="Enter Text", default="") # type: ignore
     def execute(self, context):
         text = self.text
-        create_mesh_from_json_data(False,text)
+        von_createcontrols.create_mesh_from_json_data(False,text)
         return {'FINISHED'}
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
@@ -190,7 +173,7 @@ class VonPanel_RiggingTools__Button_SaveNewControl(bpy.types.Operator):
     bl_label = "Save Control"
     
     def execute(self, context):
-        saveselectedmesh()
+        von_createcontrols.saveselectedmesh()
         return {'FINISHED'}
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
@@ -241,36 +224,4 @@ class VonPanel_RiggingTools(VonPanel, bpy.types.Panel):
         row.label(text= "Weight Painting", icon= 'CUBE')
 
 
-# ------------------------------------------------------------------------
-#    Register Classes
-# ------------------------------------------------------------------------
 
-classes = (
-    MySettings,
-    VonPanel_PrimaryPanel,
-    VonPanel_RiggingTools,
-    VonPanel_RiggingTools__Submenu_BoneSearch,
-    VonPanel_RiggingTools__Submenu_CreateControl,
-    VonPanel_RiggingTools__Button_SaveNewControl,
-    Von_Dropdown_AddCustomBoneshape
-)
-
-def register():
-    from bpy.utils import register_class # type: ignore
-    for cls in classes:
-        register_class(cls)
-
-    bpy.types.Scene.my_tool = PointerProperty(type=MySettings)
-
-def unregister():
-    from bpy.utils import unregister_class # type: ignore
-    for cls in reversed(classes):
-        unregister_class(cls)
-
-    del bpy.types.Scene.my_tool
-
-
-
-if __name__ == "__main__":
-    register()
-    #bpy.ops.von.popoutpanelbonesearch('INVOKE_DEFAULT')

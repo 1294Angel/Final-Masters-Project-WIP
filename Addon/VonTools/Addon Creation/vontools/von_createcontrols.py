@@ -4,12 +4,12 @@
 
 import bpy, json, pprint, bmesh, os, sys, mathutils # type: ignore
 from bpy import context # type: ignore
-from bpy.types import Operator # type: ignore
+from bpy.types import Operator # type: ignore 
 from bpy_extras.object_utils import object_data_add # type: ignore
 from mathutils import Vector # type: ignore
 from math import radians
 import pathlib
-from von_buttoncontrols import *
+from .von_buttoncontrols import *
 
 # ------------------------------------------------------------------------
 #    Create General Functions
@@ -174,7 +174,7 @@ def getobjectdata(controldata):
     file = open(controldata+'.txt')
     
 def getfolderloc():
-    dir = os.path.dirname(bpy.data.filepath)
+    dir = os.path.dirname(os.path.abspath(__file__))
     if not dir in sys.path:
         sys.path.append(dir)
     return(dir)
