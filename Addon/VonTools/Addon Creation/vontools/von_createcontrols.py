@@ -9,6 +9,7 @@ from bpy_extras.object_utils import object_data_add # type: ignore
 from mathutils import Vector # type: ignore
 from math import radians
 import pathlib
+from . import von_buttoncontrols
 from .von_buttoncontrols import *
 
 # ------------------------------------------------------------------------

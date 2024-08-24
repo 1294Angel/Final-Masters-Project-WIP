@@ -34,6 +34,8 @@ from . import von_createcontrols
 import imp
 imp.reload(von_buttoncontrols)
 imp.reload(von_createcontrols)
+from .von_buttoncontrols import *
+from .von_createcontrols import *
 # ------------------------------------------------------------------------
 #    Scene Properties
 # ------------------------------------------------------------------------
@@ -225,3 +227,27 @@ class VonPanel_RiggingTools(VonPanel, bpy.types.Panel):
 
 
 
+classes = (
+    MySettings,
+    VonPanel_PrimaryPanel,
+    VonPanel_RiggingTools,
+    VonPanel_RiggingTools__Submenu_BoneSearch,
+    VonPanel_RiggingTools__Submenu_CreateControl,
+    VonPanel_RiggingTools__Button_SaveNewControl,
+    Von_Dropdown_AddCustomBoneshape
+)
+
+def von_menupopup_register():
+    print(f'Menu File Initiated')
+    from bpy.utils import register_class # type: ignore
+    for cls in classes:
+        register_class(cls)
+
+    bpy.types.Scene.my_tool = PointerProperty(type=MySettings)
+
+def von_menupopup_unregister():
+    from bpy.utils import unregister_class # type: ignore
+    for cls in reversed(classes):
+        unregister_class(cls)
+
+    del bpy.types.Scene.my_tool
